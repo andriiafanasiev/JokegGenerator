@@ -3,7 +3,6 @@ import { useState } from 'react';
 
 function App() {
     const [joke, setJoke] = useState<string>('');
-
     const [amountOfJokes, setAmountOfJokes] = useState<number>(1);
 
     interface Joke {
@@ -25,6 +24,7 @@ function App() {
         safe: boolean;
         lang: string;
     }
+
     async function getTheJoke(jokesAmount: number): Promise<void> {
         try {
             const response = await fetch(
@@ -67,28 +67,38 @@ function App() {
     }
 
     return (
-        <>
-            <div>
-                <h1>Joke generator</h1>
-                <p className="mt-2">Just click to "Get a Joke" button</p>
+        <div className="flex flex-col items-center p-4 md:p-8 lg:p-12 w-full max-w-2xl mx-auto text-center">
+            <h1 className="text-2xl md:text-3xl font-bold">Joke Generator</h1>
+            <p className="mt-2">Just click the "Get a Joke" button</p>
 
-                <pre className="mt-5 mb-10">{joke}</pre>
-                <p>How many jokes would you ganerate?</p>
-                <div className="flex flex-row gap-2.5 items-center justify-center mt-2 mb-20">
-                    <button onClick={increaseJokesAmount}>+</button>
-                    {amountOfJokes}
-                    <button onClick={decreaseJokesAmount}>-</button>
-                </div>
+            <pre className="mt-5 mb-10 p-4 rounded-md w-full overflow-auto break-words whitespace-pre-wrap">
+                {joke}
+            </pre>
 
+            <p className="text-lg">How many jokes would you generate?</p>
+            <div className="flex flex-row gap-2.5 items-center justify-center mt-2 mb-10">
                 <button
-                    onClick={() => {
-                        getTheJoke(amountOfJokes);
-                    }}
+                    className="px-3 py-1  text-white rounded-lg"
+                    onClick={increaseJokesAmount}
                 >
-                    Get a Joke
+                    +
+                </button>
+                <span className="text-xl font-medium">{amountOfJokes}</span>
+                <button
+                    className="px-3 py-1 text-white rounded-lg"
+                    onClick={decreaseJokesAmount}
+                >
+                    -
                 </button>
             </div>
-        </>
+
+            <button
+                className="px-6 py-2 text-white rounded-lg w-full sm:w-auto"
+                onClick={() => getTheJoke(amountOfJokes)}
+            >
+                Get a Joke
+            </button>
+        </div>
     );
 }
 
