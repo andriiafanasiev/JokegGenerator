@@ -1,9 +1,14 @@
 import './App.css';
 import { useState } from 'react';
+import topics from './topics';
 
 function App() {
     const [joke, setJoke] = useState<string>('');
     const [amountOfJokes, setAmountOfJokes] = useState<number>(1);
+
+    const [blockedTopics, setBlockedTopics] = useState<{
+        [key: string]: boolean;
+    }>({});
 
     interface Joke {
         error: boolean;
@@ -27,9 +32,17 @@ function App() {
 
     async function getTheJoke(jokesAmount: number): Promise<void> {
         try {
-            const response = await fetch(
-                `https://v2.jokeapi.dev/joke/Any?amount=${jokesAmount}`
-            );
+            let url = `https://v2.jokeapi.dev/joke/Any?amount=${jokesAmount}`;
+
+            if (Object.keys(blockedTopics).length !== 0) {
+                url += '?blacklistFlags=';
+
+                Object.keys(blockedTopics).forEach((topic: string) => {
+                    url += topic;
+                });
+            }
+
+            const response = await fetch(url);
             const data = await response.json();
 
             let allJokes = '';
@@ -90,6 +103,26 @@ function App() {
                 >
                     -
                 </button>
+            </div>
+            <h4 className="text-xl">Blacklist</h4>
+            <div className="flex flex-row gap-5 mb-2 mb-9">
+                {topics.map((topic: string) => (
+                    <label className="flex items-center gap-2" key={topic}>
+                        <input
+                            type="checkbox"
+                            name={topic}
+                            id={topic}
+                            checked={blockedTopics[topic]}
+                            onChange={() =>
+                                setBlockedTopics((prevTopics) => ({
+                                    ...prevTopics,
+                                    [topic]: !prevTopics[topic],
+                                }))
+                            }
+                        />
+                        {topic}
+                    </label>
+                ))}
             </div>
 
             <button
