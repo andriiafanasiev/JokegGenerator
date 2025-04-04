@@ -105,7 +105,7 @@ function App() {
                 </button>
             </div>
             <h4 className="text-xl">Blacklist</h4>
-            <div className="flex flex-row gap-5 mb-2 mb-9">
+            <div className="flex flex-wrap flex-row gap-1 text-sm md:text-lg md:gap-5 mt-1 mb-9">
                 {topics.map((topic: string) => (
                     <label className="flex items-center gap-2" key={topic}>
                         <input
